@@ -3,6 +3,8 @@ import { MemoryRouter as Router, Switch, Route } from 'react-router-dom';
 import icon from '../../assets/icon.svg';
 import './App.global.css';
 
+import MyEditor from './Editor';
+
 const Hello = () => {
   return (
     <div>
@@ -44,7 +46,7 @@ export default function App() {
   return (
     <Router>
       <Switch>
-        <Route path="/" component={Hello} />
+        <Route path="/" component={MyEditor} />
       </Switch>
     </Router>
   );
