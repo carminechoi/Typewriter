@@ -211,6 +211,59 @@ export default class MenuBuilder {
         ],
       },
       {
+        label: '&Edit',
+        submenu: [
+          {
+            label: '&Undo',
+            accelerator: 'Ctrl+Z',
+          },
+          {
+            label: '&Cut',
+            accelerator: 'Ctrl+X',
+          },
+          {
+            label: '&Copy',
+            accelerator: 'Ctrl+C',
+          },
+          {
+            label: '&Paste',
+            accelerator: 'Ctrl+V',
+          },
+          {
+            label: '&Delete',
+            accelerator: 'Del',
+          },
+          {
+            label: 'Find...',
+            accelerator: 'Ctrl+F',
+          },
+          {
+            label: '&Find Next',
+            accelerator: 'F3',
+          },
+          {
+            label: '&Find Previous',
+            accelerator: 'Shift+F3',
+          },
+          {
+            label: '&Replace...',
+            accelerator: 'Ctrl+H',
+          },
+          {
+            label: '&Go To...',
+            accelerator: 'Ctrl+G',
+          },
+          {
+            label: '&Select All',
+            accelerator: 'Ctrl+A',
+          },
+          {
+            label: '&/Time/Date',
+            accelerator: 'F5',
+          },
+        ],
+      },
+      {
         label: '&View',
         submenu:
           process.env.NODE_ENV === 'development' ||
