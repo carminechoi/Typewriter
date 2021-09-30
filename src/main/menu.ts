@@ -198,12 +198,36 @@ export default class MenuBuilder {
         label: '&File',
         submenu: [
           {
-            label: '&Open',
+            label: '&New',
+            accelerator: 'Ctrl+N',
+          },
+          {
+            label: '&New Window',
+            accelerator: 'Ctrl+Shift+N',
+          },
+          {
+            label: '&Open...',
             accelerator: 'Ctrl+O',
           },
           {
-            label: '&Close',
-            accelerator: 'Ctrl+W',
+            label: '&Save',
+            accelerator: 'Ctrl+S',
+          },
+          {
+            label: '&Save As...',
+            accelerator: 'Ctrl+Shift+S',
+          },
+          { type: 'separator' },
+          {
+            label: '&Page Setup...',
+          },
+          {
+            label: '&Print...',
+            accelerator: 'Ctrl+P',
+          },
+          { type: 'separator' },
+          {
+            label: '&Exit',
             click: () => {
               this.mainWindow.close();
             },
@@ -216,23 +240,30 @@ export default class MenuBuilder {
           {
             label: '&Undo',
             accelerator: 'Ctrl+Z',
+            role: 'undo',
           },
+          { type: 'separator' },
           {
             label: '&Cut',
             accelerator: 'Ctrl+X',
+            role: 'cut',
           },
           {
             label: '&Copy',
             accelerator: 'Ctrl+C',
+            role: 'copy',
           },
           {
             label: '&Paste',
             accelerator: 'Ctrl+V',
+            role: 'paste',
           },
           {
             label: '&Delete',
             accelerator: 'Del',
+            role: 'delete',
           },
+          { type: 'separator' },
           {
             label: 'Find...',
             accelerator: 'Ctrl+F',
@@ -253,13 +284,26 @@ export default class MenuBuilder {
             label: '&Go To...',
             accelerator: 'Ctrl+G',
           },
+          { type: 'separator' },
           {
             label: '&Select All',
             accelerator: 'Ctrl+A',
+            role: 'selectAll',
           },
           {
-            label: '&/Time/Date',
+            label: '&Time/Date',
             accelerator: 'F5',
+          },
+        ],
+      },
+      {
+        label: '&Format',
+        submenu: [
+          {
+            label: '&Word Wrap',
+          },
+          {
+            label: '&Font...',
           },
         ],
       },
@@ -309,29 +353,24 @@ export default class MenuBuilder {
         label: 'Help',
         submenu: [
           {
-            label: 'Learn More',
+            label: 'View Help',
             click() {
               shell.openExternal('https://electronjs.org');
             },
           },
           {
-            label: 'Documentation',
+            label: 'Send Feedback',
             click() {
               shell.openExternal(
-                'https://github.com/electron/electron/tree/main/docs#readme'
+                'https://www.bing.com/search?q=get+help+with+notepad+in+windows+10&filters=guid:%224466414-en-dia%22%20lang:%22en%22&form=T00032&ocid=HelpPane-BingIA'
               );
             },
           },
+          { type: 'separator' },
           {
-            label: 'Community Discussions',
+            label: 'About Notepad',
             click() {
               shell.openExternal('https://www.electronjs.org/community');
-            },
-          },
-          {
-            label: 'Search Issues',
-            click() {
-              shell.openExternal('https://github.com/electron/electron/issues');
             },
           },
         ],
