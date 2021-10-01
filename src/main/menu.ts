@@ -314,19 +314,21 @@ export default class MenuBuilder {
           process.env.DEBUG_PROD === 'true'
             ? [
                 {
-                  label: '&Reload',
-                  accelerator: 'Ctrl+R',
-                  click: () => {
-                    this.mainWindow.webContents.reload();
-                  },
+                  label: 'Zoom',
                 },
                 {
-                  label: 'Toggle &Full Screen',
-                  accelerator: 'F11',
+                  label: 'Status Bar',
                   click: () => {
                     this.mainWindow.setFullScreen(
                       !this.mainWindow.isFullScreen()
                     );
+                  },
+                },
+                {
+                  label: '&Reload',
+                  accelerator: 'Ctrl+R',
+                  click: () => {
+                    this.mainWindow.webContents.reload();
                   },
                 },
                 {

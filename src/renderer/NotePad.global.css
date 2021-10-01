@@ -33,6 +33,7 @@
   border-top: 2px solid rgb(216, 216, 216);
   background-color: rgb(241, 241, 241);
   font-size: 9pt;
+  overflow-x: hidden;
 }
 
 .coordinate-bar-element-col {
@@ -40,7 +41,7 @@
   align-items: center;
   border-left: 1px solid rgb(216, 216, 216);
   padding-left: 6px;
-  overflow: hidden;
+  flex-flow: nowrap;
 }
 
 .col-0 {
