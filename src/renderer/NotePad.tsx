@@ -5,12 +5,14 @@ import './NotePad.global.css';
 
 const CoordinateBar = () => {
   return (
-    <div className="coordinate-bar">
-      <div />
-      <div />
-      <div />
-      <div />
-      <div />
+    <div className="coordinate-bar-row">
+      <div className="coordinate-bar-element-col-first col-0" />
+      <div className="coordinate-bar-element-col col-1">Ln 1, Col 14</div>
+      <div className="coordinate-bar-element-col col-2 zoom">100%</div>
+      <div className="coordinate-bar-element-col col-3 end-of-line">
+        Windows(CRLF)
+      </div>
+      <div className="coordinate-bar-element-col col-4 encoding">UTF-8</div>
     </div>
   );
 };
