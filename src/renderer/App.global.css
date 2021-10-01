@@ -6,7 +6,7 @@
 body {
   height: 100vh;
   background: rgb(61, 101, 160);
-  font-family: 'Consolas';
+  font-family: 'Segoe UI';
   overflow-y: hidden;
   display: flex;
   justify-content: center;

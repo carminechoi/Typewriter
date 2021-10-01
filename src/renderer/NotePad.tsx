@@ -10,7 +10,7 @@ const CoordinateBar = () => {
       <div className="coordinate-bar-element-col col-1">Ln 1, Col 14</div>
       <div className="coordinate-bar-element-col col-2 zoom">100%</div>
       <div className="coordinate-bar-element-col col-3 end-of-line">
-        Windows(CRLF)
+        Windows (CRLF)
       </div>
       <div className="coordinate-bar-element-col col-4 encoding">UTF-8</div>
     </div>
