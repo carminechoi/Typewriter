@@ -1,9 +1,9 @@
-textArea {
+.text-area {
   position: absolute;
   left: 0;
   top: 0;
   width: 100%;
-  height: 100%;
+  height: calc(100% - 17px);
   box-sizing: border-box;
 
   white-space: pre;
@@ -21,4 +21,13 @@ textArea {
   -moz-box-shadow: none;
   box-shadow: none;
   border-top: 2px solid rgb(243, 243, 243);
+}
+
+.coordinate-bar {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 17px;
+  width: 100%;
+  background-color: red;
 }
