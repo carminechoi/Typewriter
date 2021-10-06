@@ -1,4 +1,5 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
+import { electron } from 'process';
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './NotePad.global.css';
@@ -48,6 +49,20 @@ const NotePad = () => {
             setRowAndCol(e.currentTarget.selectionStart);
           }}
           onKeyDown={(e) => {
+            if (e.code === 'Tab') {
+              const start = e.currentTarget.selectionStart;
+              const end = e.currentTarget.selectionEnd;
+
+              setTextValue(
+                `${textValue.substring(0, start)}\t${textValue.substring(end)}`
+              );
+              e.currentTarget.selectionStart = start + 1;
+              e.currentTarget.selectionEnd = start + 1;
+            } else if (e.code === 'Backspace') {
+              console.log('backspace');
+            } else if (e.code !== 'Backspace') {
+              console.log('not backspace');
+            }
             setRowAndCol(e.currentTarget.selectionStart);
           }}
         />
