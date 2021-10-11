@@ -81,6 +81,8 @@ const createWindow = async () => {
     icon: getAssetPath('./icons/notepad.ico'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
+      contextIsolation: false,
+      nodeIntegration: true,
     },
   });
   nativeTheme.themeSource = 'light';
@@ -115,7 +117,6 @@ const createWindow = async () => {
 
   // Remove this if your app does not use auto updates
   // eslint-disable-next-line
-
 };
 
 /**

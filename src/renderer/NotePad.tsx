@@ -4,6 +4,8 @@ import React, { useState } from 'react';
 import ReactDOM from 'react-dom';
 import './NotePad.global.css';
 
+const { ipcRenderer } = window.require('electron');
+
 const CoordinateBar = ({ row, col }: { row: number; col: number }) => {
   const zoom = '100%';
   const EOL = 'Windows (CRLF)';
@@ -59,6 +61,7 @@ const NotePad = () => {
               e.currentTarget.selectionStart = start + 1;
               e.currentTarget.selectionEnd = start + 1;
             } else if (e.code === 'Backspace') {
+              ipcRenderer.send('ipc-example', 'hi');
               console.log('backspace');
             } else if (e.code !== 'Backspace') {
               console.log('not backspace');
