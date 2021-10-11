@@ -65,7 +65,12 @@ const NotePad = () => {
               e.preventDefault();
             } else if (e.code === 'Enter') {
               ipcRenderer.send('keyPress', 'newLine');
-            } else if (e.code !== 'Backspace') {
+            } else if (
+              e.key.length === 1 &&
+              e.code !== 'Undo' &&
+              e.code !== 'Copy' &&
+              e.code !== 'Paste'
+            ) {
               ipcRenderer.send('keyPress', 'character');
             }
             setRowAndCol(e.currentTarget.selectionStart);
