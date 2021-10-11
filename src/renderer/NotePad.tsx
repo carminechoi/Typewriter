@@ -60,11 +60,13 @@ const NotePad = () => {
               );
               e.currentTarget.selectionStart = start + 1;
               e.currentTarget.selectionEnd = start + 1;
-            } else if (e.code === 'Backspace') {
-              ipcRenderer.send('ipc-example', 'hi');
-              console.log('backspace');
+            } else if (e.code === 'Backspace' || e.code === 'Delete') {
+              console.log('delete');
+              e.preventDefault();
+            } else if (e.code === 'Enter') {
+              ipcRenderer.send('keyPress', 'newLine');
             } else if (e.code !== 'Backspace') {
-              console.log('not backspace');
+              ipcRenderer.send('keyPress', 'character');
             }
             setRowAndCol(e.currentTarget.selectionStart);
           }}

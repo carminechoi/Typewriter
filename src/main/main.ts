@@ -26,11 +26,19 @@ export default class AppUpdater {
 }
 
 let mainWindow: BrowserWindow | null = null;
+let windowPosition: number[] | null = null;
 
-ipcMain.on('ipc-example', async (event, arg) => {
-  const msgTemplate = (pingPong: string) => `IPC test: ${pingPong}`;
-  console.log(msgTemplate(arg));
-  event.reply('ipc-example', msgTemplate('pong'));
+ipcMain.on('keyPress', async (event, arg) => {
+  const position = mainWindow?.getPosition();
+  if (position && windowPosition) {
+    mainWindow?.setMovable(false);
+    if (arg === 'character') {
+      mainWindow?.setPosition(position[0] - 8, position[1]);
+    }
+    if (arg === 'newLine') {
+      mainWindow?.setPosition(windowPosition[0], position[1] - 17);
+    }
+  }
 });
 
 if (process.env.NODE_ENV === 'production') {
@@ -80,11 +88,12 @@ const createWindow = async () => {
     height: 728,
     icon: getAssetPath('./icons/notepad.ico'),
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      // preload: path.join(__dirname, 'preload.js'),
       contextIsolation: false,
       nodeIntegration: true,
     },
   });
+  windowPosition = mainWindow.getPosition();
   nativeTheme.themeSource = 'light';
   mainWindow.loadURL(resolveHtmlPath('index.html'));
 
