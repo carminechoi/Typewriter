@@ -31,7 +31,6 @@ let windowPosition: number[] | null = null;
 ipcMain.on('keyPress', async (event, arg) => {
   const position = mainWindow?.getPosition();
   if (position && windowPosition) {
-    mainWindow?.setMovable(false);
     if (arg === 'character') {
       mainWindow?.setPosition(position[0] - 8, position[1]);
     }
@@ -109,6 +108,10 @@ const createWindow = async () => {
       mainWindow.show();
       mainWindow.focus();
     }
+  });
+
+  mainWindow.on('move', () => {
+    if (mainWindow) windowPosition = mainWindow.getPosition();
   });
 
   mainWindow.on('closed', () => {
