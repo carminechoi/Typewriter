@@ -33,8 +33,9 @@ ipcMain.on('keyPress', async (event, arg) => {
   if (position && windowPosition) {
     if (arg === 'character') {
       mainWindow?.setPosition(position[0] - 8, position[1]);
-    }
-    if (arg === 'newLine') {
+    } else if (arg === 'tab') {
+      mainWindow?.setPosition(position[0] - 64, position[1]);
+    } else if (arg === 'newLine') {
       mainWindow?.setPosition(windowPosition[0], position[1] - 17);
     }
   }
@@ -110,7 +111,7 @@ const createWindow = async () => {
     }
   });
 
-  mainWindow.on('move', () => {
+  mainWindow.on('moved', () => {
     if (mainWindow) windowPosition = mainWindow.getPosition();
   });
 

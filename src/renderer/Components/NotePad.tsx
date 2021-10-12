@@ -21,22 +21,17 @@ const NotePad = () => {
     if (e.code === 'Tab') {
       const start = e.currentTarget.selectionStart;
       const end = e.currentTarget.selectionEnd;
-
       setTextValue(
         `${textValue.substring(0, start)}\t${textValue.substring(end)}`
       );
       e.currentTarget.selectionStart = start + 1;
       e.currentTarget.selectionEnd = start + 1;
+      ipcRenderer.send('keyPress', 'tab');
     } else if (e.code === 'Backspace' || e.code === 'Delete') {
       e.preventDefault();
     } else if (e.code === 'Enter') {
       ipcRenderer.send('keyPress', 'newLine');
-    } else if (
-      e.key.length === 1 &&
-      e.code !== 'Undo' &&
-      e.code !== 'Copy' &&
-      e.code !== 'Paste'
-    ) {
+    } else if (String.fromCharCode(e.keyCode).match(/(\w|\s)/g)) {
       ipcRenderer.send('keyPress', 'character');
     }
   };

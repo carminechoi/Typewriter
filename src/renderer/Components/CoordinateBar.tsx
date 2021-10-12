@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React from 'react';
+import './CoordinateBar.global.css';
 
 const CoordinateBar = ({ row, col }: { row: number; col: number }) => {
   const zoom = '100%';
