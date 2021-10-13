@@ -10,7 +10,7 @@ const NotePad = () => {
   const [textValue, setTextValue] = useState('');
   const [row, setRow] = useState(0);
   const [col, setCol] = useState(0);
-  const [prevKey, setPrevKey] = useState('');
+  const [ctrlIsDown, setCtrlIsDown] = useState(false);
 
   const setRowAndCol = (selection: number) => {
     const substr = textValue.substring(0, selection).split('\n');
@@ -32,11 +32,11 @@ const NotePad = () => {
       e.preventDefault();
     } else if (e.code === 'Enter') {
       ipcRenderer.send('keyPress', 'newLine');
-    } else if (e.code === key) {
-      console.log('undo');
+    } else if (e.code === 'ControlLeft' || e.code === 'ControlRight') {
+      setCtrlIsDown(true);
     } else if (
       String.fromCharCode(e.keyCode).match(/(\w|\s)/g) &&
-      e.code !== 'ControlLeft'
+      !ctrlIsDown
     ) {
       ipcRenderer.send('keyPress', 'character');
     }
@@ -59,10 +59,10 @@ const NotePad = () => {
           onKeyDown={(e) => {
             handleKeyDown(e);
             setRowAndCol(e.currentTarget.selectionStart);
-            setPrevKey(e.code);
           }}
           onKeyUp={(e) => {
-            setPrevKey('');
+            if (e.code === 'ControlLeft' || e.code === 'ControlRight')
+              setCtrlIsDown(false);
           }}
         />
       </div>
