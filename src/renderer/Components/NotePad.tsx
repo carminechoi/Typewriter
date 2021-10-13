@@ -19,7 +19,8 @@ const NotePad = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    if (e.code === 'Tab') {
+    const textIsSelected = window.getSelection().toString() !== '';
+    if (e.code === 'Tab' && !textIsSelected) {
       const start = e.currentTarget.selectionStart;
       const end = e.currentTarget.selectionEnd;
       setTextValue(
@@ -30,13 +31,20 @@ const NotePad = () => {
       ipcRenderer.send('keyPress', 'tab');
     } else if (e.code === 'Backspace' || e.code === 'Delete') {
       e.preventDefault();
-    } else if (e.code === 'Enter') {
+    } else if (e.code === 'Enter' && !textIsSelected) {
       ipcRenderer.send('keyPress', 'newLine');
     } else if (e.code === 'ControlLeft' || e.code === 'ControlRight') {
       setCtrlIsDown(true);
     } else if (
       String.fromCharCode(e.keyCode).match(/(\w|\s)/g) &&
+      textIsSelected &&
       !ctrlIsDown
+    ) {
+      e.preventDefault();
+    } else if (
+      String.fromCharCode(e.keyCode).match(/(\w|\s)/g) &&
+      !ctrlIsDown &&
+      !textIsSelected
     ) {
       ipcRenderer.send('keyPress', 'character');
     }
