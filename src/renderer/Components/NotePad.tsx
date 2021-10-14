@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 import React, { useState } from 'react';
+import handleTab from 'renderer/Helpers/NotePad-helpers';
 import CoordinateBar from './CoordinateBar';
-
 import './NotePad.global.css';
 
 const { ipcRenderer } = window.require('electron');
@@ -19,17 +19,24 @@ const NotePad = () => {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    const textIsSelected = window.getSelection().toString() !== '';
-    if (e.code === 'Tab' && !textIsSelected) {
-      const start = e.currentTarget.selectionStart;
-      const end = e.currentTarget.selectionEnd;
-      setTextValue(
-        `${textValue.substring(0, start)}\t${textValue.substring(end)}`
-      );
-      e.currentTarget.selectionStart = start + 1;
-      e.currentTarget.selectionEnd = start + 1;
-      ipcRenderer.send('keyPress', 'tab');
-    } else if (e.code === 'Backspace' || e.code === 'Delete') {
+    const textIsSelected = window.getSelection()?.toString() !== '';
+
+    switch (e.code) {
+      case 'Tab': {
+        const tabContent = {
+          text: textValue,
+          start: e.currentTarget.selectionStart,
+          end: e.currentTarget.selectionEnd,
+        };
+        setTextValue(handleTab(tabContent));
+        ipcRenderer.send('keyPress', 'tab');
+        break;
+      }
+      default:
+        console.log(e.code);
+    }
+
+    if (e.code === 'Backspace' || e.code === 'Delete') {
       e.preventDefault();
     } else if (e.code === 'Enter' && !textIsSelected) {
       ipcRenderer.send('keyPress', 'newLine');
