@@ -1,15 +1,7 @@
 import { KeyboardEvent } from 'react';
 
-const handleTab = (tabContent: {
-  text: string;
-  start: number;
-  end: number;
-}) => {
-  const text = `${tabContent.text.substring(
-    0,
-    tabContent.start
-  )}\t${tabContent.text.substring(tabContent.end)}`;
-  return text;
+const handleTab = (text: string, start: number, end: number) => {
+  return `${text.substring(0, start)}\t${text.substring(end)}`;
 };
 
 export default handleTab;

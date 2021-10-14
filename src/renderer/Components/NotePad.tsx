@@ -20,40 +20,39 @@ const NotePad = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const textIsSelected = window.getSelection()?.toString() !== '';
-
+    let key;
     switch (e.code) {
       case 'Tab': {
-        const tabContent = {
-          text: textValue,
-          start: e.currentTarget.selectionStart,
-          end: e.currentTarget.selectionEnd,
-        };
-        setTextValue(handleTab(tabContent));
+        const text = handleTab(
+          textValue,
+          e.currentTarget.selectionStart,
+          e.currentTarget.selectionEnd
+        );
+        setTextValue(text);
         ipcRenderer.send('keyPress', 'tab');
         break;
       }
+      case 'Backspace':
+      case 'Delete':
+      case 'Fn': {
+        e.preventDefault();
+        break;
+      }
+      case 'Enter': {
+        if (!textIsSelected) ipcRenderer.send('keyPress', 'newLine');
+        break;
+      }
+      case 'ControlLeft' || 'ControlRight': {
+        setCtrlIsDown(true);
+        break;
+      }
       default:
-        console.log(e.code);
-    }
-
-    if (e.code === 'Backspace' || e.code === 'Delete') {
-      e.preventDefault();
-    } else if (e.code === 'Enter' && !textIsSelected) {
-      ipcRenderer.send('keyPress', 'newLine');
-    } else if (e.code === 'ControlLeft' || e.code === 'ControlRight') {
-      setCtrlIsDown(true);
-    } else if (
-      String.fromCharCode(e.keyCode).match(/(\w|\s)/g) &&
-      textIsSelected &&
-      !ctrlIsDown
-    ) {
-      e.preventDefault();
-    } else if (
-      String.fromCharCode(e.keyCode).match(/(\w|\s)/g) &&
-      !ctrlIsDown &&
-      !textIsSelected
-    ) {
-      ipcRenderer.send('keyPress', 'character');
+        key = String.fromCharCode(e.keyCode);
+        if (!ctrlIsDown && key.match(/^[a-zA-Z0-9!@#$%^&*)(+=._-]+$/g)) {
+          if (textIsSelected) e.preventDefault();
+          else ipcRenderer.send('keyPress', 'character');
+        }
+        console.log(key);
     }
   };
 
