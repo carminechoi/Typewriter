@@ -20,8 +20,8 @@ const NotePad = () => {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const textIsSelected = window.getSelection()?.toString() !== '';
-    let key;
-    switch (e.code) {
+    const keyCode = e.key;
+    switch (keyCode) {
       case 'Tab': {
         const text = handleTab(
           textValue,
@@ -32,27 +32,28 @@ const NotePad = () => {
         ipcRenderer.send('keyPress', 'tab');
         break;
       }
+      case 'Enter': {
+        if (!textIsSelected) ipcRenderer.send('keyPress', 'newLine');
+        break;
+      }
       case 'Backspace':
       case 'Delete':
       case 'Fn': {
         e.preventDefault();
         break;
       }
-      case 'Enter': {
-        if (!textIsSelected) ipcRenderer.send('keyPress', 'newLine');
-        break;
-      }
-      case 'ControlLeft' || 'ControlRight': {
+      case 'Control': {
         setCtrlIsDown(true);
         break;
       }
+      case 'z':
+      case 'v': {
+        if (ctrlIsDown) e.preventDefault();
+        break;
+      }
       default:
-        key = String.fromCharCode(e.keyCode);
-        if (!ctrlIsDown && key.match(/^[a-zA-Z0-9!@#$%^&*)(+=._-]+$/g)) {
-          if (textIsSelected) e.preventDefault();
-          else ipcRenderer.send('keyPress', 'character');
-        }
-        console.log(key);
+        console.log(`Is Control Down: ${ctrlIsDown}`);
+        console.log(keyCode);
     }
   };
 
@@ -64,6 +65,7 @@ const NotePad = () => {
           value={textValue}
           spellCheck="false"
           onChange={(e) => {
+            ipcRenderer.send('keyPress', 'character');
             setTextValue(e.target.value);
             setRowAndCol(e.currentTarget.selectionStart);
           }}
@@ -75,8 +77,7 @@ const NotePad = () => {
             setRowAndCol(e.currentTarget.selectionStart);
           }}
           onKeyUp={(e) => {
-            if (e.code === 'ControlLeft' || e.code === 'ControlRight')
-              setCtrlIsDown(false);
+            if (e.key === 'Control') setCtrlIsDown(false);
           }}
         />
       </div>
