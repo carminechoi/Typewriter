@@ -2,9 +2,11 @@ import {
   app,
   Menu,
   shell,
+  dialog,
   BrowserWindow,
   MenuItemConstructorOptions,
 } from 'electron';
+import openFile from './files';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -208,6 +210,9 @@ export default class MenuBuilder {
           {
             label: '&Open...',
             accelerator: 'Ctrl+O',
+            click: () => {
+              openFile(this.mainWindow);
+            },
           },
           {
             label: '&Save',

@@ -18,6 +18,10 @@ const NotePad = () => {
     setCol(substr[substr.length - 1].length + 1);
   };
 
+  ipcRenderer.on('FILE_OPEN', (event, args) => {
+    console.log('got FILE_OPEN', event, args);
+  });
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     const textIsSelected = window.getSelection()?.toString() !== '';
     const keyCode = e.key;
@@ -29,11 +33,11 @@ const NotePad = () => {
           e.currentTarget.selectionEnd
         );
         setTextValue(text);
-        ipcRenderer.send('keyPress', 'tab');
+        ipcRenderer.send('KEYPRESS', 'tab');
         break;
       }
       case 'Enter': {
-        if (!textIsSelected) ipcRenderer.send('keyPress', 'newLine');
+        if (!textIsSelected) ipcRenderer.send('KEYPRESS', 'newLine');
         break;
       }
       case 'Backspace':
@@ -65,7 +69,7 @@ const NotePad = () => {
           value={textValue}
           spellCheck="false"
           onChange={(e) => {
-            ipcRenderer.send('keyPress', 'character');
+            ipcRenderer.send('KEYPRESS', 'character');
             setTextValue(e.target.value);
             setRowAndCol(e.currentTarget.selectionStart);
           }}
