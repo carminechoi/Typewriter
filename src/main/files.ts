@@ -1,4 +1,4 @@
-import { dialog, BrowserWindow } from 'electron';
+import { dialog, BrowserWindow, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
@@ -29,20 +29,19 @@ const saveFile = (mainWindow: BrowserWindow) => {
   dialog
     .showSaveDialog({
       title: 'Save As',
-      defaultPath: path.join(__dirname, '../assets/sample.txt'),
-      filters: [{ name: 'Text Document', extensions: ['txt'] }],
+      defaultPath: path.join(__dirname, '../assets/*.txt'),
+      filters: [{ name: 'Text Documents(*.txt)', extensions: ['txt'] }],
     })
     .then((file) => {
       // eslint-disable-next-line promise/always-return
       if (!file.canceled && file.filePath) {
+        mainWindow.webContents.send('SEND_ME_TEXTVALUE');
         fs.writeFile(
           file.filePath.toString(),
           'This is a Sample File',
           (err) => {
             if (err) {
               console.log(err);
-            } else {
-              console.log('Saved');
             }
           }
         );
@@ -53,4 +52,29 @@ const saveFile = (mainWindow: BrowserWindow) => {
     });
 };
 
-export default { openFile, saveFile };
+const saveAsFile = (mainWindow: BrowserWindow) => {
+  dialog
+    .showSaveDialog({
+      title: 'Save As',
+      defaultPath: path.join(__dirname, '../assets/*.txt'),
+      filters: [{ name: 'Text Documents (*.txt)', extensions: ['txt'] }],
+    })
+    .then((file) => {
+      // eslint-disable-next-line promise/always-return
+      if (!file.canceled && file.filePath) {
+        mainWindow.webContents.send('SEND_ME_TEXT');
+        fs.writeFile(
+          file.filePath.toString(),
+          'This is a Sample File',
+          (err) => {
+            if (err) console.log(err);
+          }
+        );
+      }
+    })
+    .catch((err) => {
+      console.error(err);
+    });
+};
+
+export default { openFile, saveFile, saveAsFile };

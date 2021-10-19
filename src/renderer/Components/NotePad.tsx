@@ -20,9 +20,11 @@ const NotePad = () => {
 
   useEffect(() => {
     // Anything in here is fired on component mount.
-    ipcRenderer.on('FILE_OPEN', (event, args) => {
+    ipcRenderer.on('FILE_OPEN', (_event, args) => {
       setTextValue(args);
-      console.log('got FILE_OPEN', event, args);
+    });
+    ipcRenderer.on('SEND_ME_TEXTVALUE', (event) => {
+      event.sender.send('SEND_ME_TEXTVALUE_REPLY', textValue);
     });
     return () => {
       // Anything in here is fired on component unmount.

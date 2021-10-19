@@ -224,6 +224,9 @@ export default class MenuBuilder {
           {
             label: '&Save As...',
             accelerator: 'Ctrl+Shift+S',
+            click: () => {
+              files.saveAsFile(this.mainWindow);
+            },
           },
           { type: 'separator' },
           {
