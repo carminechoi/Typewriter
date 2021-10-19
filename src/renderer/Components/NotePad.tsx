@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
-import React, { useState } from 'react';
-import handleTab from 'renderer/Helpers/NotePad-helpers';
+import React, { useEffect, useState } from 'react';
+import handleKeyDown from 'renderer/Helpers/NotePad-helpers';
 import CoordinateBar from './CoordinateBar';
 import './NotePad.global.css';
 
@@ -18,48 +18,16 @@ const NotePad = () => {
     setCol(substr[substr.length - 1].length + 1);
   };
 
-  ipcRenderer.on('FILE_OPEN', (event, args) => {
-    console.log('got FILE_OPEN', event, args);
-  });
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
-    const textIsSelected = window.getSelection()?.toString() !== '';
-    const keyCode = e.key;
-    switch (keyCode) {
-      case 'Tab': {
-        const text = handleTab(
-          textValue,
-          e.currentTarget.selectionStart,
-          e.currentTarget.selectionEnd
-        );
-        setTextValue(text);
-        ipcRenderer.send('KEYPRESS', 'tab');
-        break;
-      }
-      case 'Enter': {
-        if (!textIsSelected) ipcRenderer.send('KEYPRESS', 'newLine');
-        break;
-      }
-      case 'Backspace':
-      case 'Delete':
-      case 'Fn': {
-        e.preventDefault();
-        break;
-      }
-      case 'Control': {
-        setCtrlIsDown(true);
-        break;
-      }
-      case 'z':
-      case 'v': {
-        if (ctrlIsDown) e.preventDefault();
-        break;
-      }
-      default:
-        console.log(`Is Control Down: ${ctrlIsDown}`);
-        console.log(keyCode);
-    }
-  };
+  useEffect(() => {
+    // Anything in here is fired on component mount.
+    ipcRenderer.on('FILE_OPEN', (event, args) => {
+      setTextValue(args);
+      console.log('got FILE_OPEN', event, args);
+    });
+    return () => {
+      // Anything in here is fired on component unmount.
+    };
+  }, []);
 
   return (
     <div>
@@ -77,7 +45,9 @@ const NotePad = () => {
             setRowAndCol(e.currentTarget.selectionStart);
           }}
           onKeyDown={(e) => {
-            handleKeyDown(e);
+            const handleResult = handleKeyDown(e, textValue, ctrlIsDown);
+            setTextValue(handleResult.textValue);
+            setCtrlIsDown(handleResult.ctrlIsDown);
             setRowAndCol(e.currentTarget.selectionStart);
           }}
           onKeyUp={(e) => {
