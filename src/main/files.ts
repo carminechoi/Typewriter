@@ -12,7 +12,6 @@ const writeFile = (filePath: string | undefined, content: string) => {
       if (err) {
         console.log(err);
       }
-      console.log(`file has been saved: ${content}`);
     });
   }
 };
@@ -35,7 +34,7 @@ const openFile = (mainWindow: BrowserWindow) => {
       }
     })
     .catch((err) => {
-      console.error(err);
+      console.error(`error: showOpenDialog - ${err}`);
     });
 };
 
@@ -56,7 +55,7 @@ const saveFile = (mainWindow: BrowserWindow) => {
       }
     })
     .catch((err) => {
-      console.error(err);
+      console.error(`error: showSaveDialog - ${err}`);
     });
 };
 
@@ -77,7 +76,7 @@ const saveAsFile = (mainWindow: BrowserWindow) => {
       }
     })
     .catch((err) => {
-      console.error(err);
+      console.error(`error: showSaveDialog - ${err}`);
     });
 };
 
