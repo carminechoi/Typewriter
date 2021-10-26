@@ -13,7 +13,7 @@ const openFile = (mainWindow: BrowserWindow) => {
       if (!file.canceled) {
         fs.readFile(file.filePaths[0], (err, data) => {
           if (!err) {
-            mainWindow.webContents.send('FILE_OPEN', data.toString());
+            mainWindow.webContents.send('app:open-text-reply', data.toString());
           } else {
             console.log(err);
           }
@@ -35,16 +35,17 @@ const saveFile = (mainWindow: BrowserWindow) => {
     .then((file) => {
       // eslint-disable-next-line promise/always-return
       if (!file.canceled && file.filePath) {
-        mainWindow.webContents.send('SEND_ME_TEXTVALUE');
-        fs.writeFile(
-          file.filePath.toString(),
-          'This is a Sample File',
-          (err) => {
-            if (err) {
-              console.log(err);
-            }
+        let text = '';
+        mainWindow.webContents.send('app:save-text-request');
+        ipcMain.on('app:save-text-reply', (_event, textValue) => {
+          text = textValue;
+          console.log(`reply:  ${text}`);
+        });
+        fs.writeFile(file.filePath.toString(), text.toString(), (err) => {
+          if (err) {
+            console.log(err);
           }
-        );
+        });
       }
     })
     .catch((err) => {

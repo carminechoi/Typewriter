@@ -20,16 +20,20 @@ const NotePad = () => {
 
   useEffect(() => {
     // Anything in here is fired on component mount.
-    ipcRenderer.on('FILE_OPEN', (_event, args) => {
+    ipcRenderer.once('app:open-text-reply', (_event, args) => {
       setTextValue(args);
     });
-    ipcRenderer.on('SEND_ME_TEXTVALUE', (event) => {
-      event.sender.send('SEND_ME_TEXTVALUE_REPLY', textValue);
+    ipcRenderer.once('app:save-text-request', (event) => {
+      event.sender.send('app:save-text-reply', textValue);
+      console.log(`sent: ${textValue}`);
     });
+    ipcRenderer.removeAllListeners('app:open-text-reply');
+    ipcRenderer.removeAllListeners('app:save-text-reply');
     return () => {
       // Anything in here is fired on component unmount.
+      ipcRenderer.removeAllListeners('app:save-text-reply');
     };
-  }, []);
+  }, [textValue]);
 
   return (
     <div>
@@ -39,9 +43,10 @@ const NotePad = () => {
           value={textValue}
           spellCheck="false"
           onChange={(e) => {
-            ipcRenderer.send('KEYPRESS', 'character');
-            setTextValue(e.target.value);
+            ipcRenderer.send('app:keypress', 'character');
+            setTextValue(e.target.value.toString());
             setRowAndCol(e.currentTarget.selectionStart);
+            console.log(`onChange: ${textValue}`);
           }}
           onClick={(e) => {
             setRowAndCol(e.currentTarget.selectionStart);

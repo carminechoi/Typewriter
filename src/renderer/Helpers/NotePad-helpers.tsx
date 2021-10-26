@@ -20,11 +20,11 @@ const handleKeyDown = (
         e.currentTarget.selectionStart,
         e.currentTarget.selectionEnd
       );
-      ipcRenderer.send('KEYPRESS', 'tab');
+      ipcRenderer.send('app:keypress', 'tab');
       break;
     }
     case 'Enter': {
-      if (!textIsSelected) ipcRenderer.send('KEYPRESS', 'newLine');
+      if (!textIsSelected) ipcRenderer.send('app:keypress', 'newLine');
       break;
     }
     case 'Backspace':

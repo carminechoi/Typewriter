@@ -28,7 +28,7 @@ export default class AppUpdater {
 let mainWindow: BrowserWindow | null = null;
 let windowPosition: number[] | null = null;
 
-ipcMain.on('KEYPRESS', async (event, arg) => {
+ipcMain.on('app:keypress', async (_event, arg) => {
   const position = mainWindow?.getPosition();
   if (position && windowPosition) {
     if (arg === 'character') {
