@@ -23,15 +23,15 @@ const NotePad = () => {
     ipcRenderer.once('app:open-text-reply', (_event, args) => {
       setTextValue(args);
     });
+
     ipcRenderer.once('app:save-text-request', (event) => {
       event.sender.send('app:save-text-reply', textValue);
-      console.log(`sent: ${textValue}`);
     });
-    ipcRenderer.removeAllListeners('app:open-text-reply');
-    ipcRenderer.removeAllListeners('app:save-text-reply');
-    return () => {
+
+    return function cleanup() {
       // Anything in here is fired on component unmount.
-      ipcRenderer.removeAllListeners('app:save-text-reply');
+      ipcRenderer.removeAllListeners('app:open-text-reply');
+      ipcRenderer.removeAllListeners('app:save-text-request');
     };
   }, [textValue]);
 

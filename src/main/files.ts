@@ -2,6 +2,21 @@ import { dialog, BrowserWindow, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
+const readFile = (filePath: fs.PathLike) => {
+  return fs.readFileSync(filePath).toString();
+};
+
+const writeFile = (filePath: string | undefined, content: string) => {
+  if (filePath) {
+    fs.writeFile(filePath, content, (err) => {
+      if (err) {
+        console.log(err);
+      }
+      console.log(`file has been saved: ${content}`);
+    });
+  }
+};
+
 const openFile = (mainWindow: BrowserWindow) => {
   dialog
     .showOpenDialog({
@@ -11,13 +26,12 @@ const openFile = (mainWindow: BrowserWindow) => {
     .then((file) => {
       // eslint-disable-next-line promise/always-return
       if (!file.canceled) {
-        fs.readFile(file.filePaths[0], (err, data) => {
-          if (!err) {
-            mainWindow.webContents.send('app:open-text-reply', data.toString());
-          } else {
-            console.log(err);
-          }
-        });
+        const content = readFile(file.filePaths[0]);
+        if (content) {
+          mainWindow.webContents.send('app:open-text-reply', content);
+        } else {
+          console.log('error: could not read file');
+        }
       }
     })
     .catch((err) => {
@@ -34,17 +48,10 @@ const saveFile = (mainWindow: BrowserWindow) => {
     })
     .then((file) => {
       // eslint-disable-next-line promise/always-return
-      if (!file.canceled && file.filePath) {
-        let text = '';
+      if (file.filePath) {
         mainWindow.webContents.send('app:save-text-request');
-        ipcMain.on('app:save-text-reply', (_event, textValue) => {
-          text = textValue;
-          console.log(`reply:  ${text}`);
-        });
-        fs.writeFile(file.filePath.toString(), text.toString(), (err) => {
-          if (err) {
-            console.log(err);
-          }
+        ipcMain.once('app:save-text-reply', (_event, textValue) => {
+          writeFile(file.filePath, textValue);
         });
       }
     })
@@ -58,19 +65,15 @@ const saveAsFile = (mainWindow: BrowserWindow) => {
     .showSaveDialog({
       title: 'Save As',
       defaultPath: path.join(__dirname, '../assets/*.txt'),
-      filters: [{ name: 'Text Documents (*.txt)', extensions: ['txt'] }],
+      filters: [{ name: 'Text Documents(*.txt)', extensions: ['txt'] }],
     })
     .then((file) => {
       // eslint-disable-next-line promise/always-return
-      if (!file.canceled && file.filePath) {
-        mainWindow.webContents.send('SEND_ME_TEXT');
-        fs.writeFile(
-          file.filePath.toString(),
-          'This is a Sample File',
-          (err) => {
-            if (err) console.log(err);
-          }
-        );
+      if (file.filePath) {
+        mainWindow.webContents.send('app:save-text-request');
+        ipcMain.once('app:save-text-reply', (_event, textValue) => {
+          writeFile(file.filePath, textValue);
+        });
       }
     })
     .catch((err) => {
