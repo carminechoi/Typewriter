@@ -2,11 +2,14 @@ import {
   app,
   Menu,
   shell,
-  dialog,
   BrowserWindow,
   MenuItemConstructorOptions,
 } from 'electron';
-import files from './files';
+import file from './file';
+import edit from './edit';
+
+// eslint-disable-next-line import/no-cycle
+import { createWindow } from '../main';
 
 interface DarwinMenuItemConstructorOptions extends MenuItemConstructorOptions {
   selector?: string;
@@ -202,30 +205,36 @@ export default class MenuBuilder {
           {
             label: '&New',
             accelerator: 'Ctrl+N',
+            click: () => {
+              file.openNewFile(this.mainWindow);
+            },
           },
           {
             label: '&New Window',
             accelerator: 'Ctrl+Shift+N',
+            click: () => {
+              createWindow();
+            },
           },
           {
             label: '&Open...',
             accelerator: 'Ctrl+O',
             click: () => {
-              files.openFile(this.mainWindow);
+              file.openFile(this.mainWindow);
             },
           },
           {
             label: '&Save',
             accelerator: 'Ctrl+S',
             click: () => {
-              files.saveFile(this.mainWindow);
+              file.saveFile(this.mainWindow);
             },
           },
           {
             label: '&Save As...',
             accelerator: 'Ctrl+Shift+S',
             click: () => {
-              files.saveAsFile(this.mainWindow);
+              file.saveAsFile(this.mainWindow);
             },
           },
           { type: 'separator' },
@@ -235,6 +244,9 @@ export default class MenuBuilder {
           {
             label: '&Print...',
             accelerator: 'Ctrl+P',
+            click: () => {
+              file.print(this.mainWindow);
+            },
           },
           { type: 'separator' },
           {
@@ -256,7 +268,7 @@ export default class MenuBuilder {
           { type: 'separator' },
           {
             label: '&Cut',
-            accelerator: 'Ctrl+X',
+            // accelerator: 'Ctrl+X',
             role: 'cut',
           },
           {
@@ -278,6 +290,9 @@ export default class MenuBuilder {
           {
             label: 'Find...',
             accelerator: 'Ctrl+F',
+            click: () => {
+              edit.findInPage(this.mainWindow);
+            },
           },
           {
             label: '&Find Next',

@@ -14,7 +14,8 @@ import path from 'path';
 import { app, BrowserWindow, shell, ipcMain, nativeTheme } from 'electron';
 import { autoUpdater } from 'electron-updater';
 import log from 'electron-log';
-import MenuBuilder from './menu';
+// eslint-disable-next-line import/no-cycle
+import MenuBuilder from './menu/menu';
 import { resolveHtmlPath } from './util';
 
 export default class AppUpdater {
@@ -66,7 +67,7 @@ const installExtensions = async () => {
     .catch(console.log);
 };
 
-const createWindow = async () => {
+export const createWindow = async () => {
   if (
     process.env.NODE_ENV === 'development' ||
     process.env.DEBUG_PROD === 'true'

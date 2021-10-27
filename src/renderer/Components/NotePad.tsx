@@ -20,7 +20,11 @@ const NotePad = () => {
 
   useEffect(() => {
     // Anything in here is fired on component mount.
-    ipcRenderer.once('app:open-text-reply', (_event, args) => {
+    ipcRenderer.once('app:set-new-text-request', () => {
+      setTextValue('');
+    });
+
+    ipcRenderer.once('app:set-open-text-request', (_event, args) => {
       setTextValue(args);
     });
 
@@ -30,7 +34,8 @@ const NotePad = () => {
 
     return function cleanup() {
       // Anything in here is fired on component unmount.
-      ipcRenderer.removeAllListeners('app:open-text-reply');
+      ipcRenderer.removeAllListeners('app:set-new-text-request');
+      ipcRenderer.removeAllListeners('app:set-open-text-request');
       ipcRenderer.removeAllListeners('app:save-text-request');
     };
   }, [textValue]);
@@ -46,7 +51,6 @@ const NotePad = () => {
             ipcRenderer.send('app:keypress', 'character');
             setTextValue(e.target.value.toString());
             setRowAndCol(e.currentTarget.selectionStart);
-            console.log(`onChange: ${textValue}`);
           }}
           onClick={(e) => {
             setRowAndCol(e.currentTarget.selectionStart);
