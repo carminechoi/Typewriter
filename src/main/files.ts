@@ -2,6 +2,11 @@ import { dialog, BrowserWindow, ipcMain } from 'electron';
 import fs from 'fs';
 import path from 'path';
 
+let currentFile = {
+  isOpen: false,
+  filePath: '',
+};
+
 const readFile = (filePath: fs.PathLike) => {
   return fs.readFileSync(filePath).toString();
 };
@@ -27,6 +32,7 @@ const openFile = (mainWindow: BrowserWindow) => {
       if (!file.canceled) {
         const content = readFile(file.filePaths[0]);
         if (content) {
+          currentFile = { isOpen: true, filePath: file.filePaths[0] };
           mainWindow.webContents.send('app:open-text-reply', content);
         } else {
           console.log('error: could not read file');
@@ -39,24 +45,33 @@ const openFile = (mainWindow: BrowserWindow) => {
 };
 
 const saveFile = (mainWindow: BrowserWindow) => {
-  dialog
-    .showSaveDialog({
-      title: 'Save As',
-      defaultPath: path.join(__dirname, '../assets/*.txt'),
-      filters: [{ name: 'Text Documents(*.txt)', extensions: ['txt'] }],
-    })
-    .then((file) => {
-      // eslint-disable-next-line promise/always-return
-      if (file.filePath) {
-        mainWindow.webContents.send('app:save-text-request');
-        ipcMain.once('app:save-text-reply', (_event, textValue) => {
-          writeFile(file.filePath, textValue);
-        });
-      }
-    })
-    .catch((err) => {
-      console.error(`error: showSaveDialog - ${err}`);
+  if (currentFile.isOpen) {
+    // eslint-disable-next-line promise/always-return
+    mainWindow.webContents.send('app:save-text-request');
+    ipcMain.once('app:save-text-reply', (_event, textValue) => {
+      writeFile(currentFile.filePath, textValue);
     });
+  } else {
+    dialog
+      .showSaveDialog({
+        title: 'Save As',
+        defaultPath: path.join(__dirname, '../assets/*.txt'),
+        filters: [{ name: 'Text Documents(*.txt)', extensions: ['txt'] }],
+      })
+      .then((file) => {
+        // eslint-disable-next-line promise/always-return
+        if (file.filePath) {
+          currentFile = { isOpen: true, filePath: file.filePath };
+          mainWindow.webContents.send('app:save-text-request');
+          ipcMain.once('app:save-text-reply', (_event, textValue) => {
+            writeFile(file.filePath, textValue);
+          });
+        }
+      })
+      .catch((err) => {
+        console.error(`error: showSaveDialog - ${err}`);
+      });
+  }
 };
 
 const saveAsFile = (mainWindow: BrowserWindow) => {
@@ -69,6 +84,7 @@ const saveAsFile = (mainWindow: BrowserWindow) => {
     .then((file) => {
       // eslint-disable-next-line promise/always-return
       if (file.filePath) {
+        currentFile = { isOpen: true, filePath: file.filePath };
         mainWindow.webContents.send('app:save-text-request');
         ipcMain.once('app:save-text-reply', (_event, textValue) => {
           writeFile(file.filePath, textValue);
