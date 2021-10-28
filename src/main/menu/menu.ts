@@ -240,6 +240,7 @@ export default class MenuBuilder {
           { type: 'separator' },
           {
             label: '&Page Setup...',
+            enabled: false,
           },
           {
             label: '&Print...',
@@ -264,12 +265,14 @@ export default class MenuBuilder {
             label: '&Undo',
             accelerator: 'Ctrl+Z',
             role: 'undo',
+            enabled: false,
           },
           { type: 'separator' },
           {
             label: '&Cut',
             // accelerator: 'Ctrl+X',
             role: 'cut',
+            enabled: false,
           },
           {
             label: '&Copy',
@@ -280,11 +283,13 @@ export default class MenuBuilder {
             label: '&Paste',
             accelerator: 'Ctrl+V',
             role: 'paste',
+            enabled: false,
           },
           {
             label: '&Delete',
             accelerator: 'Del',
             role: 'delete',
+            enabled: false,
           },
           { type: 'separator' },
           {
@@ -305,10 +310,12 @@ export default class MenuBuilder {
           {
             label: '&Replace...',
             accelerator: 'Ctrl+H',
+            enabled: false,
           },
           {
             label: '&Go To...',
             accelerator: 'Ctrl+G',
+            enabled: false,
           },
           { type: 'separator' },
           {
