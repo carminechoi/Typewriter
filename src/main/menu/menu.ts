@@ -295,6 +295,7 @@ export default class MenuBuilder {
           {
             label: 'Find...',
             accelerator: 'Ctrl+F',
+            enabled: false,
             click: () => {
               edit.findInPage(this.mainWindow);
             },
@@ -302,10 +303,12 @@ export default class MenuBuilder {
           {
             label: '&Find Next',
             accelerator: 'F3',
+            enabled: false,
           },
           {
             label: '&Find Previous',
             accelerator: 'Shift+F3',
+            enabled: false,
           },
           {
             label: '&Replace...',
@@ -326,6 +329,7 @@ export default class MenuBuilder {
           {
             label: '&Time/Date',
             accelerator: 'F5',
+            enabled: false,
           },
         ],
       },
@@ -334,9 +338,11 @@ export default class MenuBuilder {
         submenu: [
           {
             label: '&Word Wrap',
+            enabled: false,
           },
           {
             label: '&Font...',
+            enabled: false,
           },
         ],
       },
@@ -348,9 +354,11 @@ export default class MenuBuilder {
             ? [
                 {
                   label: 'Zoom',
+                  enabled: false,
                 },
                 {
                   label: 'Status Bar',
+                  enabled: false,
                   click: () => {
                     this.mainWindow.setFullScreen(
                       !this.mainWindow.isFullScreen()
@@ -389,12 +397,14 @@ export default class MenuBuilder {
         submenu: [
           {
             label: 'View Help',
+            enabled: false,
             click() {
               shell.openExternal('https://electronjs.org');
             },
           },
           {
             label: 'Send Feedback',
+            enabled: false,
             click() {
               shell.openExternal(
                 'https://www.bing.com/search?q=get+help+with+notepad+in+windows+10&filters=guid:%224466414-en-dia%22%20lang:%22en%22&form=T00032&ocid=HelpPane-BingIA'
@@ -405,7 +415,7 @@ export default class MenuBuilder {
           {
             label: 'About Notepad',
             click() {
-              shell.openExternal('https://www.electronjs.org/community');
+              shell.openExternal('https://github.com/carminechoi/typewriter');
             },
           },
         ],
