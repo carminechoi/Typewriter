@@ -25,6 +25,9 @@ const handleKeyDown = (
     }
     case 'Enter': {
       if (!textIsSelected) ipcRenderer.send('app:keypress', 'newLine');
+      else {
+        e.preventDefault();
+      }
       break;
     }
     case 'Backspace':
